@@ -10,22 +10,22 @@ import json
 import time
 import base64
 
-app = Flask(__name__)
+app = Flask(Cortex)
 
 # Set environment variables
 FILE_PATH = os.environ.get('FILE_PATH', './tmp')
 PROJECT_URL = os.environ.get('URL', '') # 填写项目分配的url可实现自动访问，例如：https://www.google.com，留空即不启用该功能
 INTERVAL_SECONDS = int(os.environ.get("TIME", 120))                         # 访问间隔时间，默认120s，单位：秒
-UUID = os.environ.get('UUID', 'ab49ba6c-11f7-4a8b-9377-01e3d8618f1c')       # UUID
-NEZHA_SERVER = os.environ.get('NEZHA_SERVER', '')                  # 哪吒3个变量不全不运行
+UUID = os.environ.get('UUID', '1f980399-b860-4099-ac2b-daff97d99f8d')       # UUID
+NEZHA_SERVER = os.environ.get('NEZHA_SERVER', 'nezha2026.5785787.xyz:443')                  # 哪吒3个变量不全不运行
 NEZHA_PORT = os.environ.get('NEZHA_PORT', '443')                           # 哪吒端口为{443,8443,2096,2097,2083}其中之一时自动开启tls
-NEZHA_KEY = os.environ.get('NEZHA_KEY', '')                                 # 哪吒客户端密钥
-ARGO_DOMAIN = os.environ.get('ARGO_DOMAIN', '')                             # 国定隧道域名，留空即启用临时隧道
-ARGO_AUTH = os.environ.get('')                                 # 国定隧道json或token，留空即启用临时隧道,json获取地址：https://fscarmen.cloudflare.now.cc
+NEZHA_KEY = os.environ.get('NEZHA_KEY', 'ujo3rQzR5bygk9o8rJszqSjkbESPcO4N')                                 # 哪吒客户端密钥
+ARGO_DOMAIN = os.environ.get('ARGO_DOMAIN', 'modalruige.5785787.xyz')                             # 国定隧道域名，留空即启用临时隧道
+ARGO_AUTH = os.environ.get('eyJhIjoiNjVmMDUzZTNjYzM4Y2JiNTgwZWJlYjM3YTQzMzU4NWMiLCJ0IjoiNjAxNjgyOWQtNTYyOS00OTE3LWE5ZDgtOWNhODYyOWY1MGU0IiwicyI6Ik9XVTJObU0wWmpRdE9XTTBZUzAwTlRRM0xUZ3pNak10T0RObFpESTFZVFU1TkRFMSJ9')                                 # 国定隧道json或token，留空即启用临时隧道,json获取地址：https://fscarmen.cloudflare.now.cc
 ARGO_PORT = int(os.environ.get('ARGO_PORT', 8001))                          # Argo端口，固定隧道token请改回8080或在cf后台设置的端口与这里对应
 CFIP = os.environ.get('CFIP', 'www.visa.com.tw')                            # 优选域名或优选ip
 CFPORT = int(os.environ.get('CFPORT', 443))                                 # 优选域名或优选ip对应端口
-NAME = os.environ.get('NAME', 'modal')                                        # 节点名称
+NAME = os.environ.get('modalruige', 'modal')                                        # 节点名称
 
 # Create directory if it doesn't exist
 if not os.path.exists(FILE_PATH):
