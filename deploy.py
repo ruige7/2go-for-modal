@@ -1,6 +1,6 @@
 import modal
 
-APP_NAME = "Cortex" #沙盒名字，随意修改
+APP_NAME = "codeai" #沙盒名字，随意修改
 WORKSPACE_DIR = "/workspace"
 
 app = modal.App.lookup(APP_NAME, create_if_missing=True)
@@ -17,19 +17,11 @@ def run_in_sandbox():
 
     sandbox = modal.Sandbox.create(app=app, image=image,timeout=86400,region="eu")
 
-    # ✅ 后台执行 app.py，不阻塞 GitHub Actions；日志写到 app.log，不要再丢 /dev/null，否则报错看不见
+    # ✅ 后台执行 app.py，不阻塞 GitHub Actions
     print("🚀 Running app.py in sandbox (background)...")
-    sandbox.exec("sh", "-c", f"cd {WORKSPACE_DIR} && nohup python3 app.py > app.log 2>&1 &")
+    sandbox.exec("sh", "-c", f"cd {WORKSPACE_DIR} && nohup python3 app.py > /dev/null 2>&1 &")
 
     print("✅ Launched app.py in sandbox.")
-    # 等 25 秒后把启动日志打到 Actions 里，便于确认隧道是否起来
-    try:
-        p = sandbox.exec("sh", "-c", "sleep 25; tail -n 100 /workspace/app.log; echo ---; ps aux | grep -E 'bot|web' | grep -v grep || true")
-        for line in p.stdout:
-            print(line, end="")
-        p.wait()
-    except Exception as e:
-        print(f"⚠️ 读取 app.log 失败：{e}")
     # 不 terminate，保留沙盒运行
     # sandbox.terminate()
 
