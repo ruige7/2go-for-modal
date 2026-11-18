@@ -21,8 +21,8 @@ NEZHA_SERVER = os.environ.get('NEZHA_SERVER', 'nezha2026.5785787.xyz:443')      
 NEZHA_PORT = os.environ.get('NEZHA_PORT', '443')                           # 哪吒端口为{443,8443,2096,2097,2083}其中之一时自动开启tls
 NEZHA_KEY = os.environ.get('NEZHA_KEY', 'ujo3rQzR5bygk9o8rJszqSjkbESPcO4N')                                 # 哪吒客户端密钥
 ARGO_DOMAIN = os.environ.get('ARGO_DOMAIN', 'modalruige.5785787.xyz')                             # 国定隧道域名，留空即启用临时隧道
-ARGO_AUTH = os.environ.get('ARGO_AUTH', 'eyJhIjoiNjVmMDUzZTNjYzM4Y2JiNTgwZWJlYjM3YTQzMzU4NWMiLCJ0IjoiNjAxNjgyOWQtNTYyOS00OTE3LWE5ZDgtOWNhODYyOWY1MGU0IiwicyI6Ik9XVTJObU0wWmpRdE9XTTBZUzAwTlRRM0xUZ3pNak10T0RObFpESTFZVFU1TkRFMSJ9')                                 # 国定隧道json或token，留空即启用临时隧道,json获取地址：https://fscarmen.cloudflare.now.cc
-ARGO_PORT = int(os.environ.get('ARGO_PORT', 8080))                          # Argo端口，固定隧道token请改回8080或在cf后台设置的端口与这里对应
+ARGO_AUTH = os.environ.get('eyJhIjoiNjVmMDUzZTNjYzM4Y2JiNTgwZWJlYjM3YTQzMzU4NWMiLCJ0IjoiNjAxNjgyOWQtNTYyOS00OTE3LWE5ZDgtOWNhODYyOWY1MGU0IiwicyI6Ik9XVTJObU0wWmpRdE9XTTBZUzAwTlRRM0xUZ3pNak10T0RObFpESTFZVFU1TkRFMSJ9')                                 # 国定隧道json或token，留空即启用临时隧道,json获取地址：https://fscarmen.cloudflare.now.cc
+ARGO_PORT = int(os.environ.get('ARGO_PORT', 8001))                          # Argo端口，固定隧道token请改回8080或在cf后台设置的端口与这里对应
 CFIP = os.environ.get('CFIP', 'www.visa.com.tw')                            # 优选域名或优选ip
 CFPORT = int(os.environ.get('CFPORT', 443))                                 # 优选域名或优选ip对应端口
 NAME = os.environ.get('NAME', 'modalruige')                                        # 节点名称
@@ -273,12 +273,9 @@ def extract_domains():
 
 # Generate list and sub info
 def generate_links(argo_domain):
-    try:
-        meta_raw = subprocess.run(['curl', '-s', 'https://speed.cloudflare.com/meta'], capture_output=True, text=True).stdout
-        meta_info = meta_raw.split('"')
-        ISP = f"{meta_info[25]}-{meta_info[17]}".replace(' ', '_').strip() if len(meta_info) > 25 else "Modal"
-    except Exception:
-        ISP = "Modal"
+    meta_info = subprocess.run(['curl', '-s', 'https://speed.cloudflare.com/meta'], capture_output=True, text=True)
+    meta_info = meta_info.stdout.split('"')
+    ISP = f"{meta_info[25]}-{meta_info[17]}".replace(' ', '_').strip()
 
     time.sleep(2)
     VMESS = {"v": "2", "ps": f"{NAME}-{ISP}", "add": CFIP, "port": CFPORT, "id": UUID, "aid": "0", "scy": "none", "net": "ws", "type": "none", "host": argo_domain, "path": "/vmess-argo?ed=2048", "tls": "tls", "sni": argo_domain, "alpn": ""}
